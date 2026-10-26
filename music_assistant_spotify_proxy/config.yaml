@@ -1,6 +1,6 @@
 name: Music Assistant (Spotify proxy)
-# bump to rebuild the App image on the current nightly base image
-version: 1.0.0
+# bump to rebuild the App image (see the SERVER_REF in the Dockerfile)
+version: 1.1.0
 slug: music_assistant_spotify_proxy
 description: Music Assistant built from a fork that adds a proxy setting to the Spotify provider.
 url: https://music-assistant.io
@@ -35,11 +35,7 @@ backup_exclude:
   - library.db.backup
 options:
   log_level: info
-  server_repo: notraiday/ma-server-spotify-proxy@claude/spotify-proxy
-  frontend_repo: ""
   safe_mode: false
 schema:
   log_level: list(debug|info|warning|error)
-  server_repo: str?
-  frontend_repo: str?
   safe_mode: bool

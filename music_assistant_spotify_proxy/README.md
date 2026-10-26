@@ -1,8 +1,7 @@
 # Music Assistant (Spotify proxy)
 
-Music Assistant with a proxy setting for the Spotify provider. Install it, start it, and it
-runs the server from the [`claude/spotify-proxy`](https://github.com/notraiday/ma-server-spotify-proxy/tree/claude/spotify-proxy)
-branch of `notraiday/ma-server-spotify-proxy`. There is nothing to configure first.
+Music Assistant with a proxy setting for the Spotify provider. Install it and start it, there is
+nothing to configure first.
 
 ## Using the proxy
 
@@ -16,6 +15,18 @@ branch of `notraiday/ma-server-spotify-proxy`. There is nothing to configure fir
 Only HTTP(S) proxies are supported, not SOCKS. Changing the proxy later means going through
 the reconfigure flow again.
 
+## How it is built
+
+The App image is the nightly Music Assistant server image with the server from the
+[`claude/spotify-proxy`](https://github.com/notraiday/ma-server-spotify-proxy/tree/claude/spotify-proxy)
+branch of `notraiday/ma-server-spotify-proxy` installed on top, **once, while the image is
+built**. Starting the App installs nothing, so it starts as fast as the regular App.
+
+The commit that gets installed is pinned in the `Dockerfile` (`SERVER_REF`). To move to a newer
+commit of the fork, change `SERVER_REF` and bump `version` in `config.yaml`; Home Assistant then
+offers an update and rebuilds the image. The build needs to reach GitHub, and tries each download
+a few times before it gives up.
+
 ## Good to know
 
 - **It starts with an empty library.** Each App has its own data, so this App does not see the
@@ -23,17 +34,8 @@ the reconfigure flow again.
   own backup and restore if you want to carry them over.
 - **Run only one Music Assistant App at a time.** They share the same ports and the host
   network, so stop the regular App before starting this one.
-- **The server is installed from the branch on every start**, so a start takes longer than
-  the regular App, and a new commit on the branch is picked up by restarting.
 - **It is a fork build.** It follows the upstream `dev` branch as of the fork, not the
   stable releases, and it only moves when the fork is updated.
 - **Soloist and proxies:** Spotify does not document whether the Soloist engine honors proxy
   settings. If the engine's connections do not show up in your proxy's log, playback with
   Soloist is not going through it.
-
-## Going back to the nightly build
-
-Set **Server repository** in the App's configuration to an empty value to run the nightly
-build that is baked into the App image, or to any branch, pull request or fork. This App is
-the Music Assistant DEV App with a different default, so everything in that App's options
-applies here too.
